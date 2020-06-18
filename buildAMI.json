@@ -2,10 +2,10 @@
     "variables": {
         "region": "eu-west-1",
         "ssh_username": "ubuntu",
-        "base_ami": "ami-0f2ed58082cb08a4d",
+        "base_ami": "{{user 'ami'}}",
         "instance_type": "t2.micro",
-        "subnet_id": "subnet-c518709f",
-        "temporary_security_group_source_cidrs": "52.210.192.80/32",
+        "subnet_id": "{{user 'subnet'}}",
+        "temporary_security_group_source_cidrs": "{{user 'ip'}}/32",
         "associate_public_ip_address": "true"
     },
     "builders": [
@@ -27,7 +27,8 @@
     "provisioners": [
         {
             "type": "ansible",
-            "playbook_file": "./playbook.yml"
+            "playbook_file": "./playbook.yml",
+            "extra_arguments": [ "--extra-vars",  "app_repo={{user 'app_repo'}} port={{user 'port'}}" ]
         }
     ]
 }
