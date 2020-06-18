@@ -1,0 +1,66 @@
+---
+- hosts: all
+
+  vars:
+    http_port: 80
+    domain: "example.com"
+
+  tasks:
+    - name: Install Git package
+      become: yes
+      apt: name=git update_cache=yes state=latest
+
+    - name: Install apache
+      become: yes
+      apt: name=apache2 update_cache=yes state=latest
+      notify:
+        - restart apache2
+
+    - name: Enable mod_rewrite
+      become: yes
+      apache2_module: name=rewrite state=present
+  
+    - name: Remove default Apache port.conf
+      become: yes
+      file:
+        path: /etc/apache2/ports.conf
+        state: absent
+
+    - name: Remove default Apache default.conf
+      become: yes
+      file:
+        path: /etc/apache2/sites-available/000-default.conf
+        state: absent
+
+    - name: Add new Apache port.conf from template
+      become: yes
+      template:
+        src: templates/ports.conf.j2
+        dest: /etc/apache2/ports.conf
+
+    - name: Add new Apache default.conf from template
+      become: yes
+      template:
+        src: templates/000-default.conf.j2
+        dest: /etc/apache2/sites-available/000-default.conf
+
+    - name: Remove default website directory
+      become: yes
+      file:
+        path: /var/www/html
+        state: absent
+
+    - name: Git retrieve new website
+      become: yes
+      git:
+        repo: https://github.com/cloudacademy/static-website-example
+        dest: /var/www/html
+      notify:
+        - restart apache2
+
+  handlers:
+    - name: restart apache2
+      become: yes
+      service: name=apache2 state=restarted
+
+    
