@@ -2,18 +2,16 @@
     "variables": {
         "region": "eu-west-1",
         "ssh_username": "ubuntu",
-        "base_ami": "{{user 'ami'}}",
+        "ami": "{{user `ami`}}",
         "instance_type": "t2.micro",
-        "subnet_id": "{{user 'subnet'}}",
-        "temporary_security_group_source_cidrs": "{{user 'ip'}}/32",
+        "temporary_security_group_source_cidrs": "{{user `ip`}}/32",
         "associate_public_ip_address": "true"
     },
     "builders": [
         {
             "type": "amazon-ebs",
             "region": "{{user `region`}}",
-            "subnet_id": "{{user `subnet_id`}}",
-            "source_ami": "{{user `base_ami`}}",
+            "source_ami": "{{user `ami`}}",
             "instance_type": "{{user `instance_type`}}",
             "ssh_username": "{{user `ssh_username`}}",
             "ami_name": "AMI-Apache-{{timestamp}}",
@@ -28,7 +26,7 @@
         {
             "type": "ansible",
             "playbook_file": "./playbook.yml",
-            "extra_arguments": [ "--extra-vars",  "app_repo={{user 'app_repo'}} port={{user 'port'}}" ]
+            "extra_arguments": [ "--extra-vars",  "app_repo={{user `app_repo`}} port={{user `port`}}" ]
         }
     ]
 }

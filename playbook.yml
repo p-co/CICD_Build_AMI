@@ -2,7 +2,7 @@
 - hosts: all
 
   vars:
-    http_port: {{ port }}
+    http_port: "{{ port }}"
     domain: "example.com"
 
   tasks:
@@ -53,7 +53,7 @@
     - name: Git retrieve new website
       become: yes
       git:
-        repo: {{ app_repo }}
+        repo: "{{ app_repo }}"
         dest: /var/www/html
       notify:
         - restart apache2
