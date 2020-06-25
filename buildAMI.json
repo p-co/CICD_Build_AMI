@@ -2,7 +2,6 @@
     "variables": {
         "region": "eu-west-1",
         "ssh_username": "ubuntu",
-        "ami": "{{user `ami`}}",
         "instance_type": "t2.micro",
         "temporary_security_group_source_cidrs": "{{user `ip`}}/32",
         "associate_public_ip_address": "true"
@@ -11,7 +10,17 @@
         {
             "type": "amazon-ebs",
             "region": "{{user `region`}}",
-            "source_ami": "{{user `ami`}}",
+            "source_ami_filter": {
+    	    	"filters": {
+            		"virtualization-type": "hvm",
+     			"name": "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*",
+     			"root-device-type": "ebs"
+    	    	},
+    	    	"owners": [
+     			"099720109477"
+    	    	],
+    	    	"most_recent": true
+   	        },
             "instance_type": "{{user `instance_type`}}",
             "ssh_username": "{{user `ssh_username`}}",
             "ami_name": "AMI-Apache-{{timestamp}}",
