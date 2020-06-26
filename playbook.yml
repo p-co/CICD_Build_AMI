@@ -10,11 +10,9 @@
       become: yes
       apt: name=git update_cache=yes state=latest
 
-    - name: Install PHP CLI
+    - name: Install PHP
       become: true
-      apt:
-        name: php7.1-cli
-        state: latest
+      apt: name=php state=latest
 
     - name: Install low-level utilities
       become: true
