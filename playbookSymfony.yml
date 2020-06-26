@@ -10,6 +10,31 @@
       become: yes
       apt: name=git update_cache=yes state=latest
 
+    - name: Install PHP
+      become: true
+      apt: name=php state=latest
+
+    - name: Install low-level utilities
+      become: true
+      apt:
+        name: "{{ item }}"
+      with_items:
+        - zip
+        - unzip
+
+    - name: Download Composer
+      script: scripts/install_composer.sh
+
+    - name: Move Composer globally to be able to execute commands
+      become: true
+      command: mv composer.phar /usr/local/bin/composer
+
+    - name: Set permissions on Composer
+      become: true
+      file:
+        path: /usr/local/bin/composer
+        mode: "a+x"
+
     - name: Install apache
       become: yes
       apt: name=apache2 update_cache=yes state=latest
@@ -57,6 +82,10 @@
         dest: /var/www/html
       notify:
         - restart apache2
+
+    - name: Install dependencies of Symfony website
+      composer:
+        working_dir: /var/www/html
 
   handlers:
     - name: restart apache2

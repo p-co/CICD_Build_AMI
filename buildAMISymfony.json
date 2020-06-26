@@ -1,0 +1,41 @@
+{
+    "variables": {
+        "region": "eu-west-1",
+        "ssh_username": "ubuntu",
+        "instance_type": "t2.micro",
+        "temporary_security_group_source_cidrs": "{{user `ip`}}/32",
+        "associate_public_ip_address": "true"
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "region": "{{user `region`}}",
+            "source_ami_filter": {
+    	    	"filters": {
+            		"virtualization-type": "hvm",
+     			"name": "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*",
+     			"root-device-type": "ebs"
+    	    	},
+    	    	"owners": [
+     			"099720109477"
+    	    	],
+    	    	"most_recent": true
+   	        },
+            "instance_type": "{{user `instance_type`}}",
+            "ssh_username": "{{user `ssh_username`}}",
+            "ami_name": "Packer-Ansible",
+            "temporary_security_group_source_cidrs": "{{user `temporary_security_group_source_cidrs`}}",
+            "associate_public_ip_address": "{{user `associate_public_ip_address`}}",
+            "tags": {
+                "Name": "Packer-Ansible"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "ansible",
+            "playbook_file": "./playbook.yml",
+            "extra_arguments": [ "--extra-vars",  "app_repo={{user `app_repo`}} port={{user `port`}} cred={{user `gitlab_credentials`}}" ]
+        }
+    ]
+}
