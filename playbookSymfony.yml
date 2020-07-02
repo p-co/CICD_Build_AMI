@@ -10,9 +10,28 @@
       become: yes
       apt: name=git update_cache=yes state=latest
 
-    - name: Install PHP
+    - name: Add PHP 7 PPA repository
       become: true
-      apt: name=php state=latest
+      apt_repository:
+        repo: 'ppa:ondrej/php'
+
+    - name: Install PHP CLI
+      become: true
+      apt:
+        name: php7.2-cli
+        state: latest
+
+    - name: Install PHP XML
+      become: true
+      apt:
+        name: php7.2-xml
+        state: latest
+
+    - name: Install PHP INTL
+      become: true
+      apt:
+        name: php7.2-intl
+        state: latest
 
     - name: Install low-level utilities
       become: true
@@ -79,13 +98,37 @@
       become: yes
       git:
         repo: "{{ app_repo }}"
-        dest: /var/www/html
+        dest: /var/www/{{ app_name }}
       notify:
         - restart apache2
 
+    - name: Updating rights for website directory
+      become: yes
+      file:
+        path: /var/www/{{ app_name }}
+        state: directory
+        mode: 0777
+        recurse: yes
+
+    - name: Updating rights for website cache
+      become: yes
+      file:
+        path: /var/www/{{ app_name }}/var/cache
+        state: directory
+        mode: 0777
+        recurse: yes
+
+    - name: Run ls.sh and output "ls /"
+      command: ls /var/www/{{ app_name }}
+      register: out
+
+    - debug: var=out.stdout_lines
+
     - name: Install dependencies of Symfony website
       composer:
-        working_dir: /var/www/html
+        command: install
+        working_dir: /var/www/{{ app_name }}
+        prefer_dist: yes
 
   handlers:
     - name: restart apache2

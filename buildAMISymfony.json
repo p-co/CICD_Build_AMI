@@ -35,7 +35,7 @@
         {
             "type": "ansible",
             "playbook_file": "./playbookSymfony.yml",
-            "extra_arguments": [ "--extra-vars",  "app_repo={{user `app_repo`}} port={{user `port`}}" ]
+            "extra_arguments": [ "--extra-vars",  "app_repo={{user `app_repo`}} port={{user `port`}} app_name={{user `app_name`}}" ]
         }
     ]
 }
