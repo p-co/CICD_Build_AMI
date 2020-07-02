@@ -78,10 +78,17 @@
     - name: Git retrieve new website
       become: yes
       git:
-        repo: "{{ app_repo }}"
+        repo: "https://{{ gitlab_credentials + app_repo | regex_replace('https://') }}"
         dest: /var/www/html
       notify:
         - restart apache2
+
+    - name: Ensure remote URL does not contain credentials
+      git_config:
+        name: remote.origin.url
+        value: "{{ app_repo }}"
+        scope: local
+        repo: /var/www/html
 
     - name: Install dependencies of Symfony website
       composer:
