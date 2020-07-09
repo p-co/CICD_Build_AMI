@@ -143,14 +143,14 @@
         src: templates/.env
         dest: /var/www/{{ app_name }}/.env
 
-    - name: Create DB if not exists
-      command: '/var/www/{{ app_name }}/bin/console doctrine:database:create --if-not-exists'
+    # - name: Create DB if not exists
+    #   command: '/var/www/{{ app_name }}/bin/console doctrine:database:create --if-not-exists'
 
-    - name: Execute migrations
-      command: '/var/www/{{ app_name }}/bin/console doctrine:migrations:migrate --no-interaction'
+    # - name: Execute migrations
+    #   command: '/var/www/{{ app_name }}/bin/console doctrine:migrations:migrate --no-interaction'
 
-    - name: Load data fixtures
-      command: '/var/www/{{ app_name }}/bin/console doctrine:fixtures:load --no-interaction'
+    # - name: Load data fixtures
+    #   command: '/var/www/{{ app_name }}/bin/console doctrine:fixtures:load --no-interaction'
 
   handlers:
     - name: restart apache2
