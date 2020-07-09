@@ -27,6 +27,12 @@
         name: php7.2-xml
         state: latest
 
+    - name: Install PHP MYSQL
+      become: true
+      apt:
+        name: php7.2-mysql
+        state: latest
+
     - name: Install PHP INTL
       become: true
       apt:
