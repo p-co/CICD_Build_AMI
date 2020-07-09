@@ -35,13 +35,13 @@
     - name: Add new Apache port.conf from template
       become: yes
       template:
-        src: templates/ports.conf.j2
+        src: templates_simple/ports.conf.j2
         dest: /etc/apache2/ports.conf
 
     - name: Add new Apache default.conf from template
       become: yes
       template:
-        src: templates/000-default.conf.j2
+        src: templates_simple/000-default.conf.j2
         dest: /etc/apache2/sites-available/000-default.conf
 
     - name: Remove default website directory
