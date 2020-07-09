@@ -130,6 +130,13 @@
         working_dir: /var/www/{{ app_name }}
         prefer_dist: yes
 
+    
+    - name: Replace .env 
+          become: yes
+          template:
+            src: templates/.env
+            dest: /var/www/{{ app_name }}/.env
+
   handlers:
     - name: restart apache2
       become: yes
