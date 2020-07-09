@@ -132,10 +132,10 @@
 
     
     - name: Replace .env 
-          become: yes
-          template:
-            src: templates/.env
-            dest: /var/www/{{ app_name }}/.env
+      become: yes
+      template:
+        src: templates/.env
+        dest: /var/www/{{ app_name }}/.env
 
   handlers:
     - name: restart apache2
